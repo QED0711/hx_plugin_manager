@@ -1,0 +1,27 @@
+plugins:
+  - name: "prints the selection to the helix :echo command"
+    key: "print"
+    escape_chars: ["\\", "\\n", "\"", "'", ";", "-"]
+    steps:
+      - helix_action: "keystrokes"
+        sequence: ["<esc>", ":echo {selection}", "<enter>"]
+
+  - name: "Title Case"
+    key: "tc"
+    steps:
+      - helix_action: "command"
+        command: 'pipe %<selection> | python3 -c "import sys; print(sys.stdin.read().title().strip())"'
+
+  - name: "Title Case Selection"
+    key: "tc"
+    steps:
+      - run: "echo '{selection}' | tr '[:lower:]' '[:upper:]'"
+        capture_output: true
+      - helix_action: "keystrokes"
+        sequence: ["c", "{output}", "<esc>"]
+
+  - name: "Git Blame Line"
+    key: "gb"
+    steps:
+      - run: "git blame -L {line},{line} {file}"
+        interactive: true
