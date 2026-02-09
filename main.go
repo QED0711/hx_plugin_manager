@@ -28,7 +28,12 @@ func getSelection() string {
 
 func main() {
 	// 1. Load Config
-	data, _ := os.ReadFile("/home/qdizon/.config/helix/plugins/go/command_runner/config.yaml")
+	home, _ := os.UserHomeDir()
+	configPath := filepath.Join(home, ".config/helix/plugins/config.yaml")
+	if len(os.Args) >= 2 {
+		configPath = os.Args[1]
+	}
+	data, _ := os.ReadFile(configPath)
 	var cfg Config
 	yaml.Unmarshal(data, &cfg)
 
@@ -72,6 +77,22 @@ func main() {
 
 		if plugin.Key == choice {
 			for _, step := range plugin.Steps {
+
+				// Wait
+				if step.Wait != 0 {
+					time.Sleep(time.Duration(step.Wait) * time.Millisecond)
+				}
+
+				// Store variable from command
+				if step.VariableKey != "" {
+					cmdStr := ReplacePlaceholders(step.VarCmd, context)
+					cmd := exec.Command("sh", "-c", cmdStr)
+
+					var out bytes.Buffer
+					cmd.Stdout = &out
+					cmd.Run()
+					context[step.VariableKey] = strings.TrimSpace(out.String())
+				}
 
 				// Handle External Command
 				if step.Run != "" {

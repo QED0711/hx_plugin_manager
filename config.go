@@ -11,6 +11,11 @@ type Step struct {
 	HelixAction   string   `yaml:"helix_action,omitempty"` // "command" or "keystrokes"
 	Command       string   `yaml:"command,omitempty"`
 	Sequence      []string `yaml:"sequence,omitempty"`
+
+	VariableKey string `yaml:"variable_key,omitempty"` // name of variable to be saved in context
+	VarCmd      string `yaml:"var_cmd,omitempty"`      // command that will populate the variable
+
+	Wait int `yaml:"wait,omitempty"`
 }
 
 type Plugin struct {

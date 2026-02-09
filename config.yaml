@@ -1,8 +1,15 @@
 plugins:
+
+  
   - name: "prints the selection to the helix :echo command"
     key: "print"
     escape_chars: ["\\", "\\n", "\"", "'", ";", "-"]
     steps:
+      - variable_key: "test_var"
+        var_cmd: "echo hello world"
+      - helix_action: "command"
+        command: "echo {test_var}"
+      - wait: 500
       - helix_action: "keystrokes"
         sequence: ["<esc>", ":echo {selection}", "<enter>"]
 
