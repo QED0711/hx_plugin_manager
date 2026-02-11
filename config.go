@@ -48,7 +48,7 @@ func (p *Plugin) EscapeContent(input string) string {
 // ReplacePlaceholders swaps {file}, {selection}, etc., with real data
 func ReplacePlaceholders(input string, context map[string]string) string {
 	for k, v := range context {
-		input = strings.ReplaceAll(input, "{"+k+"}", v)
+		input = strings.ReplaceAll(input, "{{"+k+"}}", v)
 	}
 	return input
 }

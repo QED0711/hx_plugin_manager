@@ -8,27 +8,27 @@ plugins:
       - variable_key: "test_var"
         var_cmd: "echo hello world"
       - helix_action: "command"
-        command: "echo {test_var}"
+        command: "echo {{test_var}}"
       - wait: 500
       - helix_action: "keystrokes"
-        sequence: ["<esc>", ":echo {selection}", "<enter>"]
+        sequence: ["<esc>", ":echo {{selection}}", "<enter>"]
 
   - name: "Title Case"
     key: "tc"
     steps:
       - helix_action: "command"
-        command: 'pipe %<selection> | python3 -c "import sys; print(sys.stdin.read().title().strip())"'
+        command: 'pipe %{selection} | python3 -c "import sys; print(sys.stdin.read().title().strip())"'
 
   - name: "Title Case Selection"
     key: "tc"
     steps:
-      - run: "echo '{selection}' | tr '[:lower:]' '[:upper:]'"
+      - run: "echo '{{selection}}' | tr '[:lower:]' '[:upper:]'"
         capture_output: true
       - helix_action: "keystrokes"
-        sequence: ["c", "{output}", "<esc>"]
+        sequence: ["c", "{{output}}", "<esc>"]
 
   - name: "Git Blame Line"
     key: "gb"
     steps:
-      - run: "git blame -L {line},{line} {file}"
+      - run: "git blame -L {{line}},{{line}} {{file}}"
         interactive: true
