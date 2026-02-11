@@ -1,5 +1,31 @@
 plugins:
 
+  - name: word-to-tag
+    key: tag
+    steps:
+      - helix_action: keystrokes
+        sequence: [
+          "miw", # select word
+          "\"ty", # copy it
+          "ms<", # surround with <>
+          "a", # insert at end
+          "/", # type "/" char
+          "<esc>", # normal mode
+          "\"tpbhve", # paste, move back in selection mode
+          "ms<", # surround with <>
+          "F<i"] # move to middle of tag and start into insert mode
+  - name: make_tag
+    key: "make_tag"
+    escape_chars: ["\\", "\"", "'", ";", "-"]
+    steps:
+      - helix_action: command
+        command: 'pipe echo "<{{ARG1}}>{{selection}}</{{ARG1}}>"'
+  
+  - name: "Tag closing"
+    key: tagc
+    steps:
+      - helix_action: keystrokes
+        sequence: ["<esc>", ':append-output echo "<{{ARG1}}/>"', "<enter>"]
   
   - name: "prints the selection to the helix :echo command"
     key: "print"

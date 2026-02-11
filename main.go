@@ -1,5 +1,8 @@
 package main
 
+// place this command in your helix `config.toml` file in the normal and selection sections:
+// [ ':pipe-to tee ~/.config/helix/plugins/selection.txt', ':sh zellij run --floating --height 10%% --width 50%% -x 25%% -y 45%% -n "commands" --close-on-exit -- env HX_BUFFER_NAME=$PWD/%{buffer_name} HX_CURSOR_LINE=%{cursor_line} HX_CURSOR_COLUMN=%{cursor_column} HX_LANGUAGE=%{language} HX_SELECTION_LINE_START=%{selection_line_start} HX_SELECTION_LINE_END=%{selection_line_end} ~/.config/helix/plugins/go/command_runner/command_runner']
+
 import (
 	"bytes"
 	"fmt"
@@ -147,10 +150,11 @@ func main() {
 	}
 
 	// Map the chosen Name back to the Key
-	choice := m.choice
+	choices := strings.Fields(m.choice)
+	choice := choices[0]
 	var selectedPlugin *Plugin
 	for _, p := range cfg.Plugins {
-		if p.Name == m.choice || p.Key == m.choice {
+		if p.Key == choice {
 			selectedPlugin = &p
 			choice = p.Key
 			break
@@ -167,6 +171,10 @@ func main() {
 		"selection_line_start": os.Getenv("HX_SELECTION_LINE_START"),
 		"selection_line_end":   os.Getenv("HX_SELECTION_LINE_END"),
 		"selection_raw":        selection,
+	}
+
+	for i, arg := range choices {
+		context[fmt.Sprintf("ARG%d", i)] = arg
 	}
 
 	if choice == "CONFIG" {
