@@ -1,6 +1,6 @@
 plugins:
 
-  - name: word-to-tag
+  - name: Makes a an opening and closing tag of the word under the cursor 
     key: tag
     steps:
       - helix_action: keystrokes
@@ -14,14 +14,14 @@ plugins:
           "\"tpbhve", # paste, move back in selection mode
           "ms<", # surround with <>
           "F<i"] # move to middle of tag and start into insert mode
-  - name: make_tag
+  - name: Makes a tag around the current selection with a name of ARG1
     key: "make_tag"
     escape_chars: ["\\", "\"", "'", ";", "-"]
     steps:
       - helix_action: command
         command: 'pipe echo "<{{ARG1}}>{{selection}}</{{ARG1}}>"'
   
-  - name: "Tag closing"
+  - name: Makes a self closing tag of ARG1
     key: tagc
     steps:
       - helix_action: keystrokes
@@ -39,19 +39,17 @@ plugins:
       - helix_action: "keystrokes"
         sequence: ["<esc>", ":echo {{selection}}", "<enter>"]
 
+  - name: create a UUID
+    key: id
+    steps:
+      - helix_action: command
+        command: "pipe uuidgen"
+      
   - name: "Title Case"
     key: "tc"
     steps:
       - helix_action: "command"
         command: 'pipe %{selection} | python3 -c "import sys; print(sys.stdin.read().title().strip())"'
-
-  - name: "Title Case Selection"
-    key: "tc"
-    steps:
-      - run: "echo '{{selection}}' | tr '[:lower:]' '[:upper:]'"
-        capture_output: true
-      - helix_action: "keystrokes"
-        sequence: ["c", "{{output}}", "<esc>"]
 
   - name: "Git Blame Line"
     key: "gb"
